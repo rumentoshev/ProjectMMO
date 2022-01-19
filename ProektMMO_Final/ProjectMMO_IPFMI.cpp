@@ -22,7 +22,8 @@ using namespace std;
 void Home_Menu(fstream& Users);
 void Login(fstream& Users);
 void Registration(fstream& Users);
-void Registration(fstream& Users)
+void Registration(fstream& Users);
+void Menu2(fstream& Users, string username, string hashed_password, int level);
 
 int main()
 {
@@ -233,5 +234,40 @@ void Registration(fstream& Users)
 		Users << username << ":" << hashed_password << ":" << level << endl;
 		Users.close();
 		Menu2(Users, username, hashed_password, level);
+	}
+}
+void Menu2(fstream& Users, string username, string hashed_password, int level)
+{
+	char choice;
+	cout << "You are level " << level << ". Choose one of the following options:" << endl;
+	cout << "C - close account" << endl;
+	cout << "D - duel" << endl;
+	cout << "F - find" << endl;
+	cout << "L - logout" << endl;
+	cout << "S - suggest" << endl;
+	cin >> choice;
+	if (choice != 'L' && choice != 'S' && choice != 'F' && choice != 'C' && choice != 'D')
+	{
+		Menu2(Users, username, hashed_password, level);
+	}
+	if (choice == 'L')
+	{
+		Home_Menu(Users);
+	}
+	if (choice == 'S')
+	{
+		Suggest(Users, username, hashed_password, level);
+	}
+	if (choice == 'F')
+	{
+		Find(Users, username, hashed_password, level);
+	}
+	if (choice == 'C')
+	{
+		CloseAccount(Users, username, hashed_password, level);
+	}
+	if (choice == 'D')
+	{
+		Duel(Users, username, hashed_password, level);
 	}
 }
