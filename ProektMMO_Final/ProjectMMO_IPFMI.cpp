@@ -24,6 +24,7 @@ void Login(fstream& Users);
 void Registration(fstream& Users);
 void Registration(fstream& Users);
 void Menu2(fstream& Users, string username, string hashed_password, int level);
+void Suggest(fstream& Users, string username, string hashed_password, int level);
 
 int main()
 {
@@ -270,4 +271,80 @@ void Menu2(fstream& Users, string username, string hashed_password, int level)
 	{
 		Duel(Users, username, hashed_password, level);
 	}
+}
+void Suggest(fstream& Users, string username, string hashed_password, int level)
+{
+	string buffer;
+	string buffer_username;
+	string buffer_password;
+	string buffer_level;
+	int level2;
+	int down_num;
+	int top_num;
+	if (level % 5 == 0)
+	{
+		down_num = level;
+		top_num = level + 5;
+	}
+	else if (level % 5 != 0 && (level % 10) >= 1 && (level % 10) <= 4)
+	{
+		down_num = level - level % 10;
+		top_num = (level - level % 10) + 5;
+	}
+	else if (level % 5 != 0 && (level % 10) >= 6 && (level % 10) <= 9)
+	{
+		down_num = level + (5 - (level % 10));
+		top_num = (level + (5 - (level % 10))) + 5;
+	}
+	int down_num2;
+	int top_num2;
+	int counter = 0;
+	Users.open("users.txt", fstream::in);
+	if (Users.is_open())
+	{
+		while (getline(Users, buffer))
+		{
+			int i = 0;
+			while (i < buffer.size() && buffer[i] != ':')
+			{
+				buffer_username += buffer[i++];
+			}
+			i++;
+			while (i < buffer.size() && buffer[i] != ':')
+			{
+				buffer_password += buffer[i++];
+			}
+			i++;
+			while (i < buffer.size())
+			{
+				buffer_level += buffer[i++];
+			}
+			level2 = stoi(buffer_level);
+			if (level2 % 5 == 0)
+			{
+				down_num2 = level2;
+				top_num2 = level2 + 5;
+			}
+			else if (level2 % 5 != 0 && (level2 % 10) >= 1 && (level2 % 10) <= 4)
+			{
+				down_num2 = level2 - level2 % 10;
+				top_num2 = (level2 - level2 % 10) + 5;
+			}
+			else if (level2 % 5 != 0 && (level2 % 10) >= 6 && (level2 % 10) <= 9)
+			{
+				down_num2 = level2 + (5 - (level2 % 10));
+				top_num2 = (level2 + (5 - (level2 % 10))) + 5;
+			}
+			if (username != buffer_username && down_num == down_num2 && top_num == top_num2)
+			{
+				cout << buffer_username << " has also a level between " << down_num << " and " << top_num << endl;
+			}
+			buffer_username = "";
+			buffer_password = "";
+			buffer_level = "";
+		}
+	}
+	Users.close();
+	Menu2(Users, username, hashed_password, level);
+
 }
