@@ -26,6 +26,7 @@ void Registration(fstream& Users);
 void Menu2(fstream& Users, string username, string hashed_password, int level);
 void Suggest(fstream& Users, string username, string hashed_password, int level);
 void Find(fstream& Users, string username, string hashed_password, int level);
+void CloseAccount(fstream& Users, string username, string hashed_password, int level);
 
 int main()
 {
@@ -412,5 +413,134 @@ void Find(fstream& Users, string username, string hashed_password, int level)
 	}
 	Users.close();
 	Menu2(Users, username, hashed_password, level);
+
+}
+void CloseAccount(fstream& Users, string username, string hashed_password, int level)
+{
+	fstream Users_tmp;
+	string buffer;
+	string buffer_username;
+	string buffer_password;
+	string buffer_level;
+	string password_verify;
+	bool flag = false;
+	cout << "Plese enter your password!" << endl;
+	cin >> password_verify;
+	hash<string> hash_obj;
+	string hashed_password_verify = to_string(hash_obj(password_verify));
+	Users.open("users.txt", fstream::in);
+	if (Users.is_open())
+	{
+		while (getline(Users, buffer))
+		{
+			int i = 0;
+			while (i < buffer.size() && buffer[i] != ':')
+			{
+				buffer_username += buffer[i++];
+			}
+			i++;
+			while (i < buffer.size() && buffer[i] != ':')
+			{
+				buffer_password += buffer[i++];
+			}
+			i++;
+			while (i < buffer.size())
+			{
+				buffer_level += buffer[i++];
+			}
+			if ((username == buffer_username) && (hashed_password_verify == buffer_password))
+			{
+				buffer_username = "";
+				buffer_password = "";
+				buffer_level = "";
+				Users.close();
+				flag = true;
+				break;
+			}
+			buffer_username = "";
+			buffer_password = "";
+			buffer_level = "";
+		}
+		if (flag == false)
+		{
+			Users.close();
+			cout << "Incorrect password! Plese try again!" << endl;
+			CloseAccount(Users, username, hashed_password, level);
+		}
+	}
+
+	if (flag == true)
+	{
+		buffer_username = "";
+		buffer_password = "";
+		buffer_level = "";
+		Users.open("users.txt", fstream::in);
+		Users_tmp.open("users_tmp.txt", fstream::app);
+		if (Users.is_open() && Users_tmp.is_open())
+		{
+			while (getline(Users, buffer))
+			{
+				int i = 0;
+				while (i < buffer.size() && buffer[i] != ':')
+				{
+					buffer_username += buffer[i++];
+				}
+				i++;
+				while (i < buffer.size() && buffer[i] != ':')
+				{
+					buffer_password += buffer[i++];
+				}
+				i++;
+				while (i < buffer.size())
+				{
+					buffer_level += buffer[i++];
+				}
+				if (username != buffer_username)
+				{
+					Users_tmp << buffer_username << ':' << buffer_password << ":" << buffer_level << "\n";
+				}
+				buffer_username = "";
+				buffer_password = "";
+				buffer_level = "";
+			}
+		}
+		Users.close();
+		Users_tmp.close();
+		Users.open("users.txt", fstream::out | fstream::trunc);
+		Users.close();
+		Users.open("users.txt", fstream::app);
+		Users_tmp.open("users_tmp.txt", fstream::in);
+		if (Users.is_open() && Users_tmp.is_open())
+		{
+			buffer_username = "";
+			buffer_password = "";
+			buffer_level = "";
+			while (getline(Users_tmp, buffer))
+			{
+				int i = 0;
+				while (i < buffer.size() && buffer[i] != ':')
+				{
+					buffer_username += buffer[i++];
+				}
+				i++;
+				while (i < buffer.size() && buffer[i] != ':')
+				{
+					buffer_password += buffer[i++];
+				}
+				i++;
+				while (i < buffer.size())
+				{
+					buffer_level += buffer[i++];
+				}
+				Users << buffer_username << ':' << buffer_password << ":" << buffer_level << "\n";
+			}
+		}
+		Users.close();
+		Users_tmp.close();
+		Users_tmp.open("users_tmp.txt", fstream::out | fstream::trunc);
+		Users_tmp.close();
+	}
+
+	Home_Menu(Users);
 
 }
