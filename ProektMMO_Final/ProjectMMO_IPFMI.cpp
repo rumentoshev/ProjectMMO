@@ -25,6 +25,7 @@ void Registration(fstream& Users);
 void Registration(fstream& Users);
 void Menu2(fstream& Users, string username, string hashed_password, int level);
 void Suggest(fstream& Users, string username, string hashed_password, int level);
+void Find(fstream& Users, string username, string hashed_password, int level);
 
 int main()
 {
@@ -343,6 +344,71 @@ void Suggest(fstream& Users, string username, string hashed_password, int level)
 			buffer_password = "";
 			buffer_level = "";
 		}
+	}
+	Users.close();
+	Menu2(Users, username, hashed_password, level);
+
+}
+void Find(fstream& Users, string username, string hashed_password, int level)
+{
+	string buffer;
+	string buffer_username;
+	string buffer_password;
+	string buffer_level;
+	string username2;
+	int level2;
+	bool flag = false;
+	cout << "Plese enter a username you want to find!" << endl;
+	cin >> username2;
+	Users.open("users.txt", fstream::in);
+	if (Users.is_open())
+	{
+		while (getline(Users, buffer))
+		{
+			int i = 0;
+			while (i < buffer.size() && buffer[i] != ':')
+			{
+				buffer_username += buffer[i++];
+			}
+			i++;
+			while (i < buffer.size() && buffer[i] != ':')
+			{
+				buffer_password += buffer[i++];
+			}
+			i++;
+			while (i < buffer.size())
+			{
+				buffer_level += buffer[i++];
+			}
+			level2 = stoi(buffer_level);
+			if (username2 == buffer_username)
+			{
+				flag = true;
+				cout << username2 << endl;
+				if (level2 % 5 == 0)
+				{
+					cout << "This user has level between " << level2 << " and " << level + 5 << endl;
+				}
+				else if (level2 % 5 != 0 && (level2 % 10) >= 1 && (level2 % 10) <= 4)
+				{
+					cout << "This user has level between " << level2 - level2 % 10 << " and " << (level2 - level2 % 10) + 5 << endl;
+				}
+				else if (level2 % 5 != 0 && (level2 % 10) >= 6 && (level2 % 10) <= 9)
+				{
+					cout << "This user has level between " << level2 + (5 - (level2 % 10)) << " and " << (level2 + (5 - (level2 % 10))) + 5 << endl;
+				}
+				break;
+			}
+			buffer_username = "";
+			buffer_password = "";
+			buffer_level = "";
+		}
+	}
+	if (flag == false)
+	{
+		cout << "There is not a player with that username!" << endl;
+		cout << "Plese try again!" << endl;
+		Find(Users, username, hashed_password, level);
 	}
 	Users.close();
 	Menu2(Users, username, hashed_password, level);
