@@ -8,4 +8,4 @@ The project simulate the Login/Register menu for MMO game and also the in-game m
  - When you choose "Find" you will have to enter a username of a player.After that you will be shown his level range and username.
  - When you choose "Logout" you will log out and be moved to the home menu with Login/Registe options. The same goes for "Close account", but in this case you will be asked to enter your password and if it is correct, your account will be deleted and you will go to home menu.
  - Choosing "Quit" ,in the home menu, will close the program. 
- ! In all functions in the program if you enter username or password that is not in the date base you will be asked to enter it again and that will repeat until you enter it right.
+ - ! In all functions in the program if you enter username or password that is not in the date base you will be asked to enter it again and that will repeat until you enter it right.
